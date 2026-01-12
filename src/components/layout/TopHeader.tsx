@@ -1,57 +1,54 @@
+import useLayoutStore from "../../stores/useLayoutStore.ts";
 import { twMerge } from "tailwind-merge";
-import useLayoutStore from "../../store/useLayoutStore";
 import { IoClose } from "react-icons/io5";
+import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
-import { Swiper } from "swiper";
+import { Autoplay } from "swiper/modules";
 
-const NOTICE = [
+const NOTICES = [
    "[공지] 네이버페이 일시 이용 중단",
    "APP 다운로드 시 3,000포인트 증정",
-   "카카오톡 채널 친구 추가 시 5,000원 쿠폰 증",
+   "카카오톡 채널 친구 추가 시 5,000원 쿠폰 증정",
 ];
 
 function TopHeader() {
-   const { isTopBannerVisible, hideTopBanner, topBannerHeight } = useLayoutStore();
+   const { isTopBannerVisible, hideTopBanner } = useLayoutStore();
    if (!isTopBannerVisible) return null;
 
-   // 렌더링 파트============================================================================================================
    return (
       <div
          className={twMerge(
-            ["relative", "bg-black", "text-white", "flex"],
-            ["justify-center", "items-center", "h-9", ""],
+            ["relative", "h-9", "bg-black", "text-white"],
+            ["flex", "justify-center", "items-center"],
          )}>
-         {/*  슬라이드 파트 */}
+         {/* 슬라이드 */}
          <Swiper
             direction={"vertical"}
             loop={true}
-            autoplay={{ delay: 1000, disableOnInteraction: false }}
+            autoplay={{ delay: 3000, disableOnInteraction: false }}
             modules={[Autoplay]}
-            className={twMerge(
-               ["w-full", "h-full", "max-w-lg", ""],
-               ["justify-center", "w-full", , "flex"],
-            )}>
-            {NOTICE.map((notice, index) => (
-               <SwiperSlide>
-                  <div
-                     className={twMerge([
-                        "items-center",
-                        "text-xs hover:underline",
-                        "cursor-pointer",
-                     ])}>
+            className={twMerge(["w-full", "h-full", "max-w-lg"])}>
+            {NOTICES.map((notice, index) => (
+               <SwiperSlide
+                  key={index}
+                  className={twMerge([
+                     "w-full",
+                     "h-full",
+                     "!flex", // CSS에서 !important로 우선순위를 준 것 처럼 동작
+                     "justify-center",
+                     "items-center",
+                  ])}>
+                  <div className={twMerge(["text-xs", "cursor-pointer", "hover:underline"])}>
                      {notice}
                   </div>
                </SwiperSlide>
             ))}
          </Swiper>
 
-         {/*   x버튼 파트 */}
+         {/* 버튼 */}
          <button
-            className={twMerge(["absolute", "right-4", "text-white", "cursor-pointer"])}
-            onClick={hideTopBanner}>
+            onClick={hideTopBanner}
+            className={twMerge(["absolute", "right-4", "text-white", "cursor-pointer"])}>
             <IoClose />
          </button>
       </div>
