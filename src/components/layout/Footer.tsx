@@ -1,18 +1,15 @@
-import {RouterProvider} from "react-router";
-import router from "./router/router.tsx";
-
-function App() {
+function Footer() {
     
 
 // 렌더링 파트============================================================================================================ 
-    return (<>
-            <RouterProvider router={router} />
-        </>
-
+    return (
+        <div>
+            Footer
+        </div>
     );
 }
 
-export default App;
+export default Footer;
  
  
  
