@@ -24,14 +24,13 @@ const MENU = [
             { name: "악세사리", path: "/sports-style/accessories" },
         ],
     },
-
     {
         name: "HERITAGE",
         path: "/heritage",
         subMenu: [
             { name: "마라톤 110 파리", path: "/heritage/110-paris" },
             { name: "마라톤 110", path: "/heritage/110" },
-            { name: "마라톤 220", path: "/heritage/220-paris" },
+            { name: "마라톤 220", path: "/heritage/220" },
             { name: "그랜드 슬램 82", path: "/heritage/grand-slam-82" },
         ],
     },
@@ -51,10 +50,10 @@ const MENU = [
         path: "/our-story",
         subMenu: [
             { name: "공식 후원", path: "/our-story/sponsorship" },
-            { name: "브랜드 선언", path: "/our-story/sponsorship" },
-            { name: "시즌 컬렉션", path: "/our-story/sponsorship" },
-            { name: "브랜드 가이드", path: "/our-story/sponsorship" },
-            { name: "이벤트", path: "/our-story/sponsorship" },
+            { name: "브랜드 선언", path: "/our-story/manifesto" },
+            { name: "시즌 컬렉션", path: "/our-story/collection" },
+            { name: "브랜드 가이드", path: "/our-story/guide" },
+            { name: "이벤트", path: "/our-story/event" },
         ],
     },
 ];
@@ -113,84 +112,62 @@ function Header() {
 
                     <nav
                         className={twMerge(
-                            ["hidden", "lg:flex", "flex-1", ""],
-                            ["justify-center", "gap-10", "font-bold", ""],
+                            ["hidden", "lg:flex", "flex-1"],
+                            ["justify-center", "gap-10"],
+                            ["font-bold"],
                         )}>
-                        {/*메뉴구성*/}
+                        {/* 메뉴 구성 */}
                         {MENU.map(menu => (
                             <div
                                 key={menu.name}
-                                className={twMerge([
-                                    "relative",
-                                    "group",
-                                    "h-full",
-                                    "flex",
-                                    "items-center",
-                                ])}>
+                                className={twMerge(
+                                    ["relative", "group"],
+                                    ["h-full", "flex", "items-center"],
+                                )}>
                                 <Link
                                     key={menu.name}
                                     to={menu.path}
-                                    className={twMerge([
-                                        "group",
-                                        "py-7",
-                                        "hover:text-red-600",
-                                        "transition-colors",
-                                        "relative",
-                                    ])}>
+                                    className={twMerge(
+                                        ["group", "relative"],
+                                        ["py-7", "hover:text-red-600", "transition-colors"],
+                                    )}>
                                     {menu.name}
                                     <span
                                         className={twMerge(
-                                            ["absolute", "bottom-0", "left-0", ""],
-                                            [
-                                                "w-0",
-                                                "h-[2px]",
-                                                "bg-red-600",
-                                                "transition-all",
-                                                "duration-300",
-                                            ],
-                                            ["group-hover:w-full", "", ""],
-                                        )}></span>
+                                            ["absolute", "bottom-0", "left-0"],
+                                            ["w-0", "h-[2px]", "group-hover:w-full"],
+                                            // ["w-full", "h-[2px]", "opacity-0", "group-hover:opacity-100"],
+                                            ["bg-red-600", "transition-all", "duration-1000"],
+                                        )}
+                                    />
                                 </Link>
-                                {/*펼침메뉴*/}
+
+                                {/* 펼침메뉴 */}
                                 {menu.subMenu.length > 0 && (
                                     <ul
                                         className={twMerge(
-                                            [
-                                                "absolute",
-                                                "top-full",
-                                                "left-0",
-                                                "w-40",
-                                                "group",
-                                                "left-1/2",
-                                                "-translate-x-1/2",
-                                            ],
-                                            [
-                                                "opacity-0",
-                                                "group-hover:opacity-100",
-                                                "bg-white",
-                                                "border",
-                                                "border-gray-100",
-                                            ],
-                                            [
-                                                "invisible",
-                                                "group-hover:visible",
-                                                "transition-all duration-300",
-                                            ],
+                                            ["absolute", "top-full", "left-1/2"],
+                                            ["-translate-x-1/2"],
+                                            ["w-40", "group", "bg-white"],
+                                            ["border", "border-gray-100"],
+                                            ["opacity-0", "group-hover:opacity-100"],
+                                            ["invisible", "group-hover:visible"],
+                                            ["transition-all", "duration-300"],
                                         )}>
                                         {menu.subMenu.map(subMenu => (
                                             <li
                                                 key={subMenu.name}
-                                                className={twMerge(
-                                                    ["", "", "", ""],
-                                                    ["", "", "", ""],
-                                                )}>
+                                                className={twMerge(["text-center"])}>
                                                 <Link
                                                     to={subMenu.path}
                                                     className={twMerge([
-
+                                                        "block",
+                                                        "py-3",
                                                         "text-sm",
                                                         "text-gray-600",
-                                                        "hover:bg-gray-50 transition-all",
+                                                        "hover:text-red-600",
+                                                        "hover:bg-gray-50",
+                                                        "transition-all",
                                                     ])}>
                                                     {subMenu.name}
                                                 </Link>
