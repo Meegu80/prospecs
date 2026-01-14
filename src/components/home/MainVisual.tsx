@@ -6,6 +6,12 @@ import img05 from "../../assets/images/home/mainVisual05.png";
 import img06 from "../../assets/images/home/mainVisual06.png";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade, Controller, Pagination, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import "swiper/css/effect-fade";
 
 const SLIDES = [
     { id: 1, image: img01, title: "WINTER RUNNING", sub: "겨울 러닝을 위한 퍼포먼스 웨어" },
@@ -27,11 +33,81 @@ function MainVisual() {
 
     return (
         <section className={twMerge(["w-full", "flex", "flex-col", "group"])}>
-            <div className={twMerge(["w-full", "h-[500px]", "md:h-[700px]", "relative", "bg-green-400"])}>
-                {/* 첫번째 이미지 슬라이더 */}
+            {/* Image Slider */}
+            <div
+                className={twMerge([
+                    "w-full",
+                    "h-[500px]",
+                    "md:h-[700px]",
+                    "relative",
+                    "bg-gray-200",
+                ])}>
+                <style>
+                    {`
+                        .swiper-pagination-bullet {
+                            width: 12px !important;
+                            height: 12px !important;
+                            background: rgba(255,255,255,0.5) !important;
+                            opacity: 1 !important;
+                            margin: 0 4px !important;
+                        }
+                        .swiper-pagination-bullet-active {
+                            width: 30px !important; /* Elongated active dot for modern feel */
+                            border-radius: 6px !important;
+                            background: #d62828 !important;
+                        }
+                    `}
+                </style>
+                <Swiper
+                    modules={[Autoplay, EffectFade, Controller, Pagination, Navigation]}
+                    effect="fade"
+                    autoplay={{ delay: 5000, disableOnInteraction: false }}
+                    loop={true}
+                    pagination={{
+                        clickable: true,
+                    }}
+                    navigation={true}
+                    onSwiper={(swiper: any) => setFirstSwiper(swiper)}
+                    controller={{ control: secondSwiper }}
+                    allowTouchMove={false}
+                    className="h-full w-full">
+
+                    {SLIDES.map(slide => (
+                        <SwiperSlide key={slide.id} className="relative h-full w-full">
+                            <div
+                                className="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] ease-out transform scale-100 group-hover:scale-105"
+                                style={{ backgroundImage: `url(${slide.image})` }}>
+                                <div className="absolute inset-0 bg-black/20" />
+                            </div>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             </div>
-            <div className={twMerge(["w-full", "py-10", "border-b", "border-gray-100"])}>
-                {/* 두번째 텍스트 슬라이더 */}
+
+            {/* Text Slider */}
+            <div
+                className={twMerge(["w-full", "py-10", "border-b", "border-gray-100", "bg-white"])}>
+                <div className="container mx-auto px-4">
+                    <Swiper
+                        modules={[Controller]}
+                        onSwiper={(swiper: any) => setSecondSwiper(swiper)}
+                        controller={{ control: firstSwiper }}
+                        loop={true}
+                        className="w-full">
+                        {SLIDES.map(slide => (
+                            <SwiperSlide key={slide.id}>
+                                <div className="flex flex-col items-center justify-center text-center cursor-pointer">
+                                    <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tight mb-2">
+                                        {slide.title}
+                                    </h3>
+                                    <p className="text-gray-600 text-lg md:text-xl font-medium">
+                                        {slide.sub}
+                                    </p>
+                                </div>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </div>
             </div>
         </section>
     );
