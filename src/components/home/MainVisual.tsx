@@ -6,12 +6,13 @@ import img05 from "../../assets/images/home/mainVisual05.png";
 import img06 from "../../assets/images/home/mainVisual06.png";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, EffectFade, Controller, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
+import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper";
+import { Autoplay, Controller, EffectFade, Navigation, Pagination } from "swiper/modules";
 
 const SLIDES = [
     { id: 1, image: img01, title: "WINTER RUNNING", sub: "겨울 러닝을 위한 퍼포먼스 웨어" },
@@ -28,82 +29,95 @@ const SLIDES = [
 ];
 
 function MainVisual() {
-    const [firstSwiper, setFirstSwiper] = useState(null);
-    const [secondSwiper, setSecondSwiper] = useState(null);
+    const [firstSwiper, setFirstSwiper] = useState<SwiperType | null>(null);
+    const [secondSwiper, setSecondSwiper] = useState<SwiperType | null>(null);
 
     return (
         <section className={twMerge(["w-full", "flex", "flex-col", "group"])}>
-            {/* Image Slider */}
             <div
                 className={twMerge([
                     "w-full",
                     "h-[500px]",
                     "md:h-[700px]",
                     "relative",
-                    "bg-gray-200",
+                    "bg-green-400",
                 ])}>
-                <style>
-                    {`
-                        .swiper-pagination-bullet {
-                            width: 12px !important;
-                            height: 12px !important;
-                            background: rgba(255,255,255,0.5) !important;
-                            opacity: 1 !important;
-                            margin: 0 4px !important;
-                        }
-                        .swiper-pagination-bullet-active {
-                            width: 30px !important; /* Elongated active dot for modern feel */
-                            border-radius: 6px !important;
-                            background: #d62828 !important;
-                        }
-                    `}
-                </style>
+                {/* 첫번째 이미지 슬라이더 */}
                 <Swiper
-                    modules={[Autoplay, EffectFade, Controller, Pagination, Navigation]}
-                    effect="fade"
-                    autoplay={{ delay: 5000, disableOnInteraction: false }}
-                    loop={true}
-                    pagination={{
-                        clickable: true,
-                    }}
-                    navigation={true}
-                    onSwiper={(swiper: any) => setFirstSwiper(swiper)}
+                    onSwiper={setFirstSwiper}
                     controller={{ control: secondSwiper }}
-                    allowTouchMove={false}
-                    className="h-full w-full">
-
+                    loop={true}
+                    autoplay={{ delay: 4000, disableOnInteraction: false }}
+                    pagination={{ clickable: true }}
+                    navigation={true}
+                    modules={[Autoplay, Pagination, Navigation, Controller]}
+                    className={twMerge(
+                        ["w-full", "h-full"],
+                        /*
+                         swiper 내부에 존재하는 pagination이라거나, navigation 이라고 하는 요소에는
+                         클래스가 이미 정의되어 있음. 우리는 그 클래스"에" 추가 해줘야 함
+                     */
+                        // ["w-[500px]"]
+                        [
+                            "[&_.swiper-pagination-bullet-active]:!bg-red-600",
+                            "[&_.swiper-pagination-bullet]:!w-30",
+                            "[&_.swiper-pagination-bullet]:!rounded-none",
+                        ],
+                    )}>
                     {SLIDES.map(slide => (
-                        <SwiperSlide key={slide.id} className="relative h-full w-full">
+                        <SwiperSlide key={slide.id}>
                             <div
-                                className="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] ease-out transform scale-100 group-hover:scale-105"
-                                style={{ backgroundImage: `url(${slide.image})` }}>
-                                <div className="absolute inset-0 bg-black/20" />
-                            </div>
+                                style={{
+                                    backgroundImage: `url(${slide.image})`,
+                                }}
+                                className={twMerge([
+                                    "w-full",
+                                    "h-full",
+                                    "bg-cover",
+                                    "bg-center",
+                                    // bg-[url('주소')]
+                                    // css로는 background-images: url('주소')
+                                    // bg-[url('${slide.image}')
+                                    //          -> tailwindcss는 전처리기 : 그냥 이 String을 클래스로 만들어버림
+                                ])}
+                            />
                         </SwiperSlide>
                     ))}
                 </Swiper>
             </div>
-
-            {/* Text Slider */}
-            <div
-                className={twMerge(["w-full", "py-10", "border-b", "border-gray-100", "bg-white"])}>
-                <div className="container mx-auto px-4">
+            <div className={twMerge(["w-full", "py-10", "border-b", "border-gray-100"])}>
+                {/* 두번째 텍스트 슬라이더 */}
+                <div className={twMerge(["container", "mx-auto", "px-4"])}>
                     <Swiper
-                        modules={[Controller]}
-                        onSwiper={(swiper: any) => setSecondSwiper(swiper)}
+                        onSwiper={setSecondSwiper}
                         controller={{ control: firstSwiper }}
                         loop={true}
-                        className="w-full">
+                        effect={"fade"}
+                        fadeEffect={{ crossFade: true }}
+                        modules={[EffectFade, Controller]}
+                        className={twMerge(["w-full", "max-w-4xl", "mx-auto"])}>
                         {SLIDES.map(slide => (
-                            <SwiperSlide key={slide.id}>
-                                <div className="flex flex-col items-center justify-center text-center cursor-pointer">
-                                    <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tight mb-2">
-                                        {slide.title}
-                                    </h3>
-                                    <p className="text-gray-600 text-lg md:text-xl font-medium">
-                                        {slide.sub}
-                                    </p>
-                                </div>
+                            <SwiperSlide
+                                key={slide.id}
+                                className={twMerge(
+                                    ["flex", "flex-col", "justify-center", "items-center", "gap-3"],
+                                    ["text-center"],
+                                )}>
+                                <h2
+                                    className={twMerge(
+                                        ["text-3xl", "md:text-5xl", "italic", "text-black"],
+                                        // ["opacity-0", "translate-y-4"],
+                                        ["transition-all", "duration-500"],
+                                    )}>
+                                    {slide.title}
+                                </h2>
+                                <p
+                                    className={twMerge(
+                                        ["text-lg", "md:text-xl", "text-gray-600"],
+                                        ["transition-all", "duration-500"],
+                                    )}>
+                                    {slide.sub}
+                                </p>
                             </SwiperSlide>
                         ))}
                     </Swiper>
