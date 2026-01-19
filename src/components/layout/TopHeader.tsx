@@ -5,10 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 
-
-
 const NOTICES = [
-
     "[공지] 네이버페이 일시 이용 중단",
     "APP 다운로드 시 3,000포인트 증정",
     "카카오톡 채널 친구 추가 시 5,000원 쿠폰 증정",

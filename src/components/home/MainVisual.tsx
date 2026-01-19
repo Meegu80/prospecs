@@ -3,7 +3,7 @@ import img02 from "../../assets/images/home/mainVisual02.png";
 import img03 from "../../assets/images/home/mainVisual03.png";
 import img04 from "../../assets/images/home/mainVisual04.png";
 import img05 from "../../assets/images/home/mainVisual05.png";
-import img06 from "../../assets/images/home/mainVisual06.png";
+import img06 from "../../assets/images/home/mainVisual06.jfif";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import "swiper/css";
