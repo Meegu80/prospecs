@@ -1,10 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
-import type {
-   Product,
-   ProductColor,
-   ProductImage,
-} from "../../types/product.ts";
+import type { Product, ProductColor, ProductImage } from "../../types/product.ts";
 import { getProduct } from "../../api/product.api.ts";
 import { twMerge } from "tailwind-merge";
 import Button from "../../components/common/Button.tsx";
@@ -54,21 +50,12 @@ function ProductDetailPage() {
       fetchData().then(() => {});
    }, [id]);
 
-   if (loading)
-      return (
-         <div className={twMerge(["py-40", "text-center"])}>Loading...</div>
-      );
+   if (loading) return <div className={twMerge(["py-40", "text-center"])}>Loading...</div>;
    if (!product)
-      return (
-         <div className={twMerge(["py-40", "text-center"])}>
-            상품 정보가 없습니다.
-         </div>
-      );
+      return <div className={twMerge(["py-40", "text-center"])}>상품 정보가 없습니다.</div>;
 
    // 화면에다 출력해줄 정보는 color에 종속되어 있고, color가 굉장히 많은 정보를 갖고 있음
-   const currentColor = product.colors.find(
-      color => color.id === selectedColorId,
-   );
+   const currentColor = product.colors.find(color => color.id === selectedColorId);
 
    return (
       <div className={twMerge(["w-full", "max-w-350", "mx-auto", "py-40"])}>
@@ -80,8 +67,7 @@ function ProductDetailPage() {
                <MainImageBox product={product} mainImage={mainImage} />
                {/* 작은 이미지가 한 줄로 들어가는 박스 */}
                {currentColor && currentColor.images.length > 1 && (
-                  <div
-                     className={twMerge(["flex", "gap-2", "overflow-x-auto"])}>
+                  <div className={twMerge(["flex", "gap-2", "overflow-x-auto"])}>
                      {currentColor.images.map((image, index) => (
                         <ThumbnailBox
                            key={index}
@@ -129,11 +115,18 @@ function ProductDetailPage() {
                </div>
 
                <Accordion title={"상품 설명"}>{product.summary}</Accordion>
+
+               <Accordion title={"상품 정보 고시"}>
+                  <RightInformationBox product={product} />
+               </Accordion>
             </div>
          </div>
 
          {/* 상품 상세 */}
-         <div></div>
+         <div
+            className={twMerge(["mx-auto", "max-w-215", "mt-24"])}
+            dangerouslySetInnerHTML={{ __html: product.description }}
+         />
       </div>
    );
 }
@@ -170,34 +163,16 @@ function MainImageBox({ product, mainImage }: MainImageBoxProps) {
          )}
 
          {/* 뱃지 */}
-         <div
-            className={twMerge(
-               ["absolute", "top-4", "left-4"],
-               ["flex", "gap-2"],
-            )}>
+         <div className={twMerge(["absolute", "top-4", "left-4"], ["flex", "gap-2"])}>
             {product.isBest && (
-               <span
-                  className={twMerge([
-                     "bg-white",
-                     "text-xs",
-                     "font-bold",
-                     "px-2",
-                     "py-1",
-                  ])}>
-                  BEST
-               </span>
+               <span className={twMerge(["bg-white", "text-xs", "font-bold", "px-2", "py-1"])}>
+                        BEST
+                    </span>
             )}
             {product.isNew && (
-               <span
-                  className={twMerge([
-                     "bg-white",
-                     "text-xs",
-                     "font-bold",
-                     "px-2",
-                     "py-1",
-                  ])}>
-                  NEW
-               </span>
+               <span className={twMerge(["bg-white", "text-xs", "font-bold", "px-2", "py-1"])}>
+                        NEW
+                    </span>
             )}
          </div>
       </div>
@@ -237,17 +212,12 @@ function RightHeaderBox({ product, currentColor }: RightHeaderBoxProps) {
    return (
       <div className={twMerge(["border-b", "border-gray-200", "pb-6"])}>
          <h1 className={twMerge(["text-3xl", "font-bold"])}>{product.name}</h1>
-         <div className={twMerge(["text-xs", "text-gray-500"])}>
-            {currentColor?.productCode}
-         </div>
+         <div className={twMerge(["text-xs", "text-gray-500"])}>{currentColor?.productCode}</div>
          <div className={twMerge(["mt-6"])}>
-            <span
-               className={twMerge(["text-2xl", "font-bold", "text-gray-900"])}>
-               {product.price.toLocaleString()}
-            </span>
-            <span className={twMerge(["text-lg", "font-medium", "ml-1"])}>
-               원
-            </span>
+                <span className={twMerge(["text-2xl", "font-bold", "text-gray-900"])}>
+                    {product.price.toLocaleString()}
+                </span>
+            <span className={twMerge(["text-lg", "font-medium", "ml-1"])}>원</span>
          </div>
       </div>
    );
@@ -263,20 +233,20 @@ interface RightColorSelectBoxProps {
 }
 
 function RightColorSelectBox({
-   product,
-   currentColor,
-   selectedColorId,
-   setSelectedColorId,
-   setMainImage,
-   setSelectedSize,
-}: RightColorSelectBoxProps) {
+                                product,
+                                currentColor,
+                                selectedColorId,
+                                setSelectedColorId,
+                                setMainImage,
+                                setSelectedSize,
+                             }: RightColorSelectBoxProps) {
    return (
       <div className={twMerge(["w-full"])}>
          <div className={twMerge(["text-sm", "font-bold", "mb-3"])}>
             색상
             <span className={twMerge(["text-gray-500", "ml-2"])}>
-               {currentColor?.colorName}
-            </span>
+                    {currentColor?.colorName}
+                </span>
          </div>
          <div className={twMerge(["flex", "flex-wrap", "gap-2"])}>
             {product.colors.map((color, index) => {
@@ -301,19 +271,10 @@ function RightColorSelectBox({
                         <img
                            src={thumb}
                            alt={color.colorName}
-                           className={twMerge([
-                              "w-full",
-                              "h-full",
-                              "object-cover",
-                           ])}
+                           className={twMerge(["w-full", "h-full", "object-cover"])}
                         />
                      ) : (
-                        <div
-                           className={twMerge(
-                              "w-full",
-                              "h-full",
-                              "bg-gray-50",
-                           )}>
+                        <div className={twMerge("w-full", "h-full", "bg-gray-50")}>
                            No Image
                         </div>
                      )}
@@ -332,10 +293,10 @@ interface RightSizeSelectBoxProps {
 }
 
 function RightSizeSelectBox({
-   currentColor,
-   selectedSize,
-   setSelectedSize,
-}: RightSizeSelectBoxProps) {
+                               currentColor,
+                               selectedSize,
+                               setSelectedSize,
+                            }: RightSizeSelectBoxProps) {
    return (
       <div className={twMerge(["w-full"])}>
          <div className={twMerge(["text-sm", "font-bold", "mb-3"])}>사이즈</div>
@@ -354,12 +315,8 @@ function RightSizeSelectBox({
                         isSelected
                            ? ["bg-black", "text-white"]
                            : isSoldOut
-                             ? [
-                                  "bg-gray-100",
-                                  "text-gray-500",
-                                  "cursor-not-allowed",
-                               ]
-                             : ["border-gray-300", "text-gray-700"],
+                              ? ["bg-gray-100", "text-gray-500", "cursor-not-allowed"]
+                              : ["border-gray-300", "text-gray-700"],
                      )}
                      onClick={() => setSelectedSize(size.size)}>
                      {size.size}
@@ -377,11 +334,7 @@ interface RightQuantitySelectBoxProps {
    setQuantity: Dispatch<SetStateAction<number>>;
 }
 
-function RightQuantitySelectBox({
-   price,
-   quantity,
-   setQuantity,
-}: RightQuantitySelectBoxProps) {
+function RightQuantitySelectBox({ price, quantity, setQuantity }: RightQuantitySelectBoxProps) {
    const handleQuantity = (type: "plus" | "minus") => {
       if (type === "plus") {
          setQuantity(quantity + 1);
@@ -392,17 +345,8 @@ function RightQuantitySelectBox({
 
    return (
       <div className={twMerge(["bg-gray-50", "p-5", "rounded-sm"])}>
-         <div
-            className={twMerge([
-               "flex",
-               "justify-between",
-               "items-center",
-               "mb-4",
-            ])}>
-            <span
-               className={twMerge(["text-sm", "font-bold", "text-gray-700"])}>
-               수량
-            </span>
+         <div className={twMerge(["flex", "justify-between", "items-center", "mb-4"])}>
+            <span className={twMerge(["text-sm", "font-bold", "text-gray-700"])}>수량</span>
             <div
                className={twMerge(
                   ["flex", "items-center"],
@@ -424,8 +368,8 @@ function RightQuantitySelectBox({
                      "justify-center",
                      "items-center",
                   ])}>
-                  {quantity}
-               </span>
+                        {quantity}
+                    </span>
                <button
                   className={twMerge(
                      ["w-8", "h-8", "flex", "justify-center", "items-center"],
@@ -444,22 +388,63 @@ function RightQuantitySelectBox({
                "pt-4",
                "border-t",
             ])}>
-            <span
-               className={twMerge(["text-sm", "font-bold", "text-gray-700"])}>
-               총 상품금액
-            </span>
+                <span className={twMerge(["text-sm", "font-bold", "text-gray-700"])}>
+                    총 상품금액
+                </span>
             <div>
-               <span
-                  className={twMerge([
-                     "text-2xl",
-                     "font-extrabold",
-                     "text-orange-600",
-                  ])}>
-                  {(quantity * price).toLocaleString()}
-               </span>
+                    <span className={twMerge(["text-2xl", "font-extrabold", "text-orange-600"])}>
+                        {(quantity * price).toLocaleString()}
+                    </span>
                <span className={twMerge(["text-sm", "ml-1"])}>원</span>
             </div>
          </div>
       </div>
+   );
+}
+
+interface RightInformationBoxProps {
+   product: Product;
+}
+
+function RightInformationBox({ product }: RightInformationBoxProps) {
+   return (
+      <table className={twMerge(["w-full", "text-xs", "text-left"])}>
+         <colgroup>
+            <col className={"w-40"} />
+            <col />
+         </colgroup>
+         <tbody>
+         <tr>
+            <th className="py-3 font-medium text-gray-900">소재</th>
+            <td className="py-3 text-gray-600">{product.material || "-"}</td>
+         </tr>
+         <tr>
+            <th className="py-3 font-medium text-gray-900">제조사</th>
+            <td className="py-3 text-gray-600">{product.manufacturer || "-"}</td>
+         </tr>
+         <tr>
+            <th className="py-3 font-medium text-gray-900">제조국</th>
+            <td className="py-3 text-gray-600">{product.originCountry || "-"}</td>
+         </tr>
+         <tr>
+            <th className="py-3 font-medium text-gray-900">제조년월</th>
+            <td className="py-3 text-gray-600">{product.manufactureDate || "-"}</td>
+         </tr>
+         <tr>
+            <th className="py-3 font-medium text-gray-900">취급시 주의사항</th>
+            <td className="py-3 text-gray-600 leading-relaxed">
+               {product.careInstructions || "-"}
+            </td>
+         </tr>
+         <tr>
+            <th className="py-3 font-medium text-gray-900">품질보증기준</th>
+            <td className="py-3 text-gray-600">{product.qualityAssurance || "-"}</td>
+         </tr>
+         <tr>
+            <th className="py-3 font-medium text-gray-900">A/S 책임자/전화번호</th>
+            <td className="py-3 text-gray-600">{product.asPhone || "-"}</td>
+         </tr>
+         </tbody>
+      </table>
    );
 }
