@@ -74,37 +74,23 @@ function Header() {
         }
     };
 
-    // 스크롤이 내려갔는지 안 내려갔는지를 체크해서 스타일링을 해줘야 함
     const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
-        // 사용자가 스크롤을 조금이라도 움직이면 이 handleScroll이라고 하는 함수가 발동되는데
-        // 만약 사용자가 Y스크롤의 값을 0보다 크게 가져간다면 (즉, 스크롤을 내렸다면)
-        // setIsScrolled의 값을 true로 변환. Y 스크롤의 값이 0이 된다면 false 변환.
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 0);
         };
-
-        // addEventListener(동작방식, 함수);
-        // addEventListener : 동작방식에 기재한 것을 감지하여 함수를 실행하는 메소드
-        // 창 자체에 scroll 이벤트를 감지하는 함수를 만듦
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
     const isMenuOpen = hoveredMenu !== null;
-
-    // isHome : 사용자가 홈에 위치할 때에만 true
     const isHome = pathname === "/";
-
-    // isTransparent : 배경이 투명일 경우엔 사용자가 Home에 위치하고 스크롤이 맨 위에 있을 때만
     const isTransparent = isHome && !isScrolled;
 
     return (
         <header
-            // onMouseLeave : 이 요소에서 마우스가 떠나게 되면 발동되는 함수
-            // onMouseEnter : 이 요소에 마우스가 들어오면 발동되는 함수
             onMouseLeave={() => setHoveredMenu(null)}
             className={twMerge(
                 ["fixed", "left-0", "right-0", "z-60"],
@@ -115,9 +101,13 @@ function Header() {
                 isMenuOpen && ["bg-white", "border-gray-100", "text-gray-600"],
                 isTopBannerVisible ? ["top-9"] : ["top-0"],
             )}>
+            {/* 
+                [수정] 상단 헤더 컨테이너 
+                - w-full에서 container mx-auto로 변경하여 하단 메가메뉴와 중앙 정렬 기준을 맞춤
+            */}
             <div
                 className={twMerge(
-                    ["w-full", "mx-auto", "px-4", "h-20"],
+                    ["container", "mx-auto", "px-4", "h-20"],
                     ["flex", "justify-between", "items-center"],
                 )}>
                 {/* 왼쪽 영역 */}
@@ -135,7 +125,6 @@ function Header() {
                             ["justify-center", "gap-10"],
                             ["font-bold"],
                         )}>
-                        {/* 메뉴 구성 */}
                         {MENU.map(menu => (
                             <div
                                 onMouseEnter={() => setHoveredMenu(menu.name)}
@@ -145,7 +134,6 @@ function Header() {
                                     ["h-full", "flex", "items-center"],
                                 )}>
                                 <Link
-                                    key={menu.name}
                                     to={menu.path}
                                     className={twMerge(
                                         ["relative"],
@@ -156,8 +144,7 @@ function Header() {
                                         className={twMerge(
                                             ["absolute", "bottom-0", "left-0", "h-[2px]"],
                                             hoveredMenu === menu.name ? "w-full" : "w-0",
-                                            // ["w-full", "h-[2px]", "opacity-0", "group-hover:opacity-100"],
-                                            ["bg-red-600", "transition-all", "duration-1000"],
+                                            ["bg-red-600", "transition-all", "duration-300"],
                                         )}
                                     />
                                 </Link>
@@ -209,7 +196,6 @@ function Header() {
                             LOGIN
                         </Link>
                     )}
-
                     <Link
                         to={"/cart"}
                         className={twMerge(["text-sm", "font-bold", "hidden", "md:block"])}>
@@ -218,19 +204,18 @@ function Header() {
                 </div>
             </div>
 
-            {/* 메가 메뉴 */}
-            {/* absolute를 쓴다면, 그 해당 기준점이 어떠한 상위요소를 잡고 있는지 고려 해야함 */}
-            {/* 이 때 그 기준점은 TopHeader가 있을 때와 없을 때 2가지 요소가 존재 */}
-            {/* TopHeader의 높이는 36px(9), Header의 높이는 80px(20)*/}
+            {/* 
+                [수정] 메가 메뉴 영역 
+                - 상단 헤더와 동일한 container 구조를 사용하여 부모-자식 메뉴 간 수직 정렬(일직선)을 맞춤
+            */}
             <div
                 className={twMerge(
                     ["absolute", "left-0", "w-full", "z-50", "overflow-hidden"],
-                    isTopBannerVisible ? "top-20" : "top-11",
-                    ["border-t", "border-gray-100"],
+                    "top-20", 
                     ["bg-white", "text-gray-600"],
                     ["transition-all", "duration-300"],
                     isMenuOpen
-                        ? ["h-64", "opacity-100", "border-b"]
+                        ? ["h-64", "opacity-100", "border-b", "border-gray-100"]
                         : ["h-0", "opacity-0", "border-b-0"],
                 )}>
                 <div
@@ -238,16 +223,19 @@ function Header() {
                         ["container", "mx-auto", "px-4"],
                         ["flex", "justify-between"],
                     )}>
-                    {/* 왼쪽 영역 */}
-                    <div className={twMerge(["flex", "items-center", "gap-5"])}>
-                        <div className={twMerge(["w-40", "invisible"])} />
+                    {/* 
+                        [수정] 왼쪽 영역 정렬 
+                        - 상단 헤더의 로고 너비(w-40)와 메뉴 간격(gap-5, gap-10)을 동일하게 유지하여 일직선 정렬
+                    */}
+                    <div className={twMerge(["flex", "items-start", "gap-5", "pt-8"])}>
+                        {/* 상단 로고(w-40)와 동일한 공간 확보 */}
+                        <div className={twMerge(["w-40"])} />
+                        
                         <div
                             className={twMerge(
                                 ["hidden", "lg:flex", "flex-1"],
                                 ["justify-center", "gap-10"],
-                                ["font-bold"],
                             )}>
-                            {/* 메뉴 구성 */}
                             {MENU.map(menu => (
                                 <ul
                                     key={menu.name}
@@ -258,9 +246,10 @@ function Header() {
                                                 to={subMenu.path}
                                                 className={twMerge([
                                                     "block",
-                                                    "py-2",
                                                     "text-sm",
                                                     "text-gray-500",
+                                                    "hover:text-black",
+                                                    "transition-colors"
                                                 ])}>
                                                 {subMenu.name}
                                             </Link>
@@ -271,8 +260,8 @@ function Header() {
                         </div>
                     </div>
 
-                    {/* 오른쪽 영역 */}
-                    <div className={twMerge(["w-100", "invisible"])} />
+                    {/* [수정] 오른쪽 영역: 상단 우측 메뉴 너비(w-100)와 동일하게 공간 확보 */}
+                    <div className={twMerge(["w-100"])} />
                 </div>
             </div>
         </header>
