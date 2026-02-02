@@ -20,3 +20,22 @@ export interface CreateReviewParams {
     content: string;
     imageUrls?: string[];
 }
+
+export interface UpdateReviewParams {
+    rating?: number;
+    content?: string;
+    imageUrls?: string[];
+}
+
+export interface MyReview {
+    id: number;
+    rating: number;
+    content: string | null;
+    createdAt: string;
+    product: {
+        id: number,
+        name: string,
+        thumbnail: string | null;
+    };
+    images: ReviewImage[];
+}
