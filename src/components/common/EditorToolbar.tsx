@@ -20,6 +20,7 @@ import {
     MdLinkOff,
     MdHighlight,
     MdFormatClear,
+    MdColorize,
 } from "react-icons/md";
 
 interface EditorToolbarProps {
@@ -115,11 +116,29 @@ function EditorToolbar({ editor, onImageUpload }: EditorToolbarProps) {
                 </select>
             </div>
 
+            {/* 색상 선택 (스포이드 + 컬러박스) */}
+            <div className="flex items-center border-r border-gray-300 pr-1 mr-1">
+                <div className="relative flex items-center p-1 rounded hover:bg-gray-200 transition-all cursor-pointer">
+                    <MdColorize size={18} className="text-gray-500 mr-1" />
+                    <div 
+                        className="w-4 h-4 rounded-sm border border-gray-300" 
+                        style={{ backgroundColor: editor.getAttributes("textStyle").color || "#000000" }}
+                    />
+                    <input
+                        type="color"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        onInput={(e) => editor.chain().focus().setColor((e.target as HTMLInputElement).value).run()}
+                        value={editor.getAttributes("textStyle").color || "#000000"}
+                        title="글자 색상 선택"
+                    />
+                </div>
+            </div>
+
             {/* 서식 초기화 */}
             <div className="flex border-r border-gray-300 pr-1 mr-1">
                 <ToolbarButton 
                     onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()} 
-                    title="서식 지우기"
+                    title="모든 서식 지우기"
                 >
                     <MdFormatClear size={20} />
                 </ToolbarButton>
